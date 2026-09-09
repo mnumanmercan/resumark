@@ -403,6 +403,10 @@ export interface Translations {
     linkedin: string
     github: string
     website: string
+    linkedinText: string
+    githubText: string
+    websiteText: string
+    linkTextHint: string
     errorFullNameRequired: string
     errorJobTitleRequired: string
     errorInvalidEmail: string

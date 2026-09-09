@@ -11,6 +11,10 @@ export interface PersonalInfo {
   linkedin?: string
   github?: string
   website?: string
+  /** Anchor text shown for the matching URL; empty means "derive from the URL". */
+  linkedinLabel?: string
+  githubLabel?: string
+  websiteLabel?: string
   profilePhoto?: string
 }
 

@@ -8,6 +8,14 @@ export interface PersonalInfo {
   linkedin?: string
   github?: string
   website?: string
+  /**
+   * Anchor text shown in the CV for the matching URL. Empty / absent means
+   * "derive it from the URL" — the long-standing behaviour every template
+   * still falls back to, so existing CVs render unchanged.
+   */
+  linkedinLabel?: string
+  githubLabel?: string
+  websiteLabel?: string
   profilePhoto?: string
 }
 
@@ -126,7 +134,7 @@ export const LANGUAGE_PROFICIENCY_LEVELS: readonly string[] = [
   'Basic',
 ] as const
 
-export const CURRENT_VERSION = '1.4.0'
+export const CURRENT_VERSION = '1.5.0'
 export const DEFAULT_TEMPLATE_ID = 'classic'
 
 /**
@@ -157,6 +165,11 @@ export function migrateCVData(stored: CVData): CVData {
   if (stored.meta.educationInColumns === undefined) {
     stored.meta.educationInColumns = false
   }
+  // v1.4.0 → v1.5.0: introduce custom anchor text for the optional links.
+  // Empty string keeps the previous rendering (the URL itself, host-stripped).
+  stored.personal.linkedinLabel ??= ''
+  stored.personal.githubLabel ??= ''
+  stored.personal.websiteLabel ??= ''
   // Stamp with current version so future migrations can gate on it.
   stored.meta.version = CURRENT_VERSION
   return stored
@@ -175,6 +188,9 @@ export function createEmptyCVData(): CVData {
       linkedin: '',
       github: '',
       website: '',
+      linkedinLabel: '',
+      githubLabel: '',
+      websiteLabel: '',
       profilePhoto: '',
     },
     summary: '',

@@ -2,6 +2,7 @@
   import { computed, type Component } from 'vue'
   import type { CVData, SectionKey } from '@/types/cv.types'
   import { buildDisplaySections } from './displaySections'
+  import { buildSocialLinks } from './socialLinks'
 
   import ExperienceSection from './technical/sections/ExperienceSection.vue'
   import EducationSection from './technical/sections/EducationSection.vue'
@@ -31,32 +32,7 @@
     buildDisplaySections(orderedSections.value, props.cvData.meta.educationInColumns ?? false),
   )
 
-  const socialLinks = computed(() => {
-    const p = props.cvData.personal
-    const links: Array<{ label: string; value: string; href: string; prefix: string }> = []
-    if (p.linkedin)
-      links.push({
-        label: 'LinkedIn',
-        value: p.linkedin.replace(/https?:\/\/(www\.)?linkedin\.com\/in\/?/, ''),
-        href: p.linkedin,
-        prefix: 'in/',
-      })
-    if (p.github)
-      links.push({
-        label: 'GitHub',
-        value: p.github.replace(/https?:\/\/(www\.)?github\.com\//, ''),
-        href: p.github,
-        prefix: 'gh/',
-      })
-    if (p.website)
-      links.push({
-        label: 'Website',
-        value: p.website.replace('https://', ''),
-        href: p.website,
-        prefix: 'web/',
-      })
-    return links
-  })
+  const socialLinks = computed(() => buildSocialLinks(props.cvData.personal, 'handle'))
 </script>
 
 <template>
@@ -120,7 +96,7 @@
           >|</span
         >
         <span v-if="cvData.personal.location">{{ cvData.personal.location }}</span>
-        <template v-for="(link, i) in socialLinks" :key="link.label">
+        <template v-for="(link, i) in socialLinks" :key="link.key">
           <span v-if="cvData.personal.location || i > 0" style="margin: 0 7px; color: #cbd5e1"
             >|</span
           >
@@ -130,7 +106,7 @@
             rel="noopener noreferrer"
             style="color: #b8532a; text-decoration: none"
           >
-            <span style="color: #94a3b8">{{ link.prefix }}</span
+            <span v-if="link.prefix" style="color: #94a3b8">{{ link.prefix }}</span
             >{{ link.value }}
           </a>
         </template>

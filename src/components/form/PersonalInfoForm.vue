@@ -43,6 +43,37 @@
     }
   }
 
+  /**
+   * The three optional links, each a (display text, URL) pair. Driven from data
+   * so the two fields per row never drift apart.
+   */
+  const optionalLinks = [
+    {
+      key: 'linkedin',
+      labelKey: 'linkedinLabel',
+      labelI18nKey: 'forms.linkedinText',
+      urlI18nKey: 'forms.linkedin',
+      labelPlaceholder: 'LinkedIn',
+      urlPlaceholder: 'https://linkedin.com/in/janedoe',
+    },
+    {
+      key: 'github',
+      labelKey: 'githubLabel',
+      labelI18nKey: 'forms.githubText',
+      urlI18nKey: 'forms.github',
+      labelPlaceholder: 'GitHub',
+      urlPlaceholder: 'https://github.com/janedoe',
+    },
+    {
+      key: 'website',
+      labelKey: 'websiteLabel',
+      labelI18nKey: 'forms.websiteText',
+      urlI18nKey: 'forms.website',
+      labelPlaceholder: 'Portfolio',
+      urlPlaceholder: 'https://janedoe.dev',
+    },
+  ] as const
+
   const isComplete = computed(
     () =>
       cvData.value.personal.fullName &&
@@ -186,43 +217,37 @@
       @blur="validateField('location')"
     />
 
-    <!-- Optional URLs -->
+    <!-- Optional URLs — each paired with the anchor text shown in the CV -->
     <div class="pt-1 border-t border-overlay/5">
-      <p class="text-xs text-secondary mb-3">{{ t('forms.optionalLinksHint') }}</p>
+      <p class="text-xs text-secondary mb-1">{{ t('forms.optionalLinksHint') }}</p>
+      <p class="text-xs text-secondary mb-3">{{ t('forms.linkTextHint') }}</p>
       <div class="flex flex-col gap-3">
-        <FormField
-          id="linkedin"
-          v-model="cvData.personal.linkedin"
-          :label="t('forms.linkedin')"
-          type="url"
-          placeholder="https://linkedin.com/in/janedoe"
-          autocomplete="url"
-          :maxlength="CV_LIMITS.personal.url"
-          :error="errors.linkedin"
-          @blur="validateField('linkedin')"
-        />
-        <FormField
-          id="github"
-          v-model="cvData.personal.github"
-          :label="t('forms.github')"
-          type="url"
-          placeholder="https://github.com/janedoe"
-          autocomplete="url"
-          :maxlength="CV_LIMITS.personal.url"
-          :error="errors.github"
-          @blur="validateField('github')"
-        />
-        <FormField
-          id="website"
-          v-model="cvData.personal.website"
-          :label="t('forms.website')"
-          type="url"
-          placeholder="https://janedoe.dev"
-          autocomplete="url"
-          :maxlength="CV_LIMITS.personal.url"
-          :error="errors.website"
-          @blur="validateField('website')"
-        />
+        <div
+          v-for="link in optionalLinks"
+          :key="link.key"
+          class="grid grid-cols-1 sm:grid-cols-3 gap-3"
+        >
+          <FormField
+            :id="`${link.key}Label`"
+            v-model="cvData.personal[link.labelKey]"
+            :label="t(link.labelI18nKey)"
+            :placeholder="link.labelPlaceholder"
+            :maxlength="CV_LIMITS.personal.urlLabel"
+          />
+          <div class="sm:col-span-2">
+            <FormField
+              :id="link.key"
+              v-model="cvData.personal[link.key]"
+              :label="t(link.urlI18nKey)"
+              type="url"
+              :placeholder="link.urlPlaceholder"
+              autocomplete="url"
+              :maxlength="CV_LIMITS.personal.url"
+              :error="errors[link.key]"
+              @blur="validateField(link.key)"
+            />
+          </div>
+        </div>
       </div>
     </div>
 
