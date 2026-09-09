@@ -2,6 +2,7 @@
   import { computed, type Component } from 'vue'
   import type { CVData, SectionKey } from '@/types/cv.types'
   import { buildDisplaySections } from './displaySections'
+  import { buildSocialLinks } from './socialLinks'
 
   import ExperienceSection from './classic/sections/ExperienceSection.vue'
   import EducationSection from './classic/sections/EducationSection.vue'
@@ -31,17 +32,7 @@
     buildDisplaySections(orderedSections.value, props.cvData.meta.educationInColumns ?? false),
   )
 
-  const socialLinks = computed(() => {
-    const p = props.cvData.personal
-    const links: Array<{ label: string; value: string; href: string }> = []
-    if (p.linkedin)
-      links.push({ label: 'LinkedIn', value: p.linkedin.replace('https://', ''), href: p.linkedin })
-    if (p.github)
-      links.push({ label: 'GitHub', value: p.github.replace('https://', ''), href: p.github })
-    if (p.website)
-      links.push({ label: 'Website', value: p.website.replace('https://', ''), href: p.website })
-    return links
-  })
+  const socialLinks = computed(() => buildSocialLinks(props.cvData.personal, 'url'))
 </script>
 
 <template>
@@ -94,7 +85,7 @@
           >|</span
         >
         <span v-if="cvData.personal.location">{{ cvData.personal.location }}</span>
-        <template v-for="(link, i) in socialLinks" :key="link.label">
+        <template v-for="(link, i) in socialLinks" :key="link.key">
           <span v-if="cvData.personal.location || i > 0" style="margin: 0 8px">|</span>
           <a
             :href="link.href"

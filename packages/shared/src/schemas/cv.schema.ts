@@ -17,6 +17,9 @@ const PersonalInfoSchema = z.object({
   linkedin: z.string().url().optional().or(z.literal('')),
   github: z.string().url().optional().or(z.literal('')),
   website: z.string().url().optional().or(z.literal('')),
+  linkedinLabel: z.string().max(CV_LIMITS.personal.urlLabel).optional(),
+  githubLabel: z.string().max(CV_LIMITS.personal.urlLabel).optional(),
+  websiteLabel: z.string().max(CV_LIMITS.personal.urlLabel).optional(),
   profilePhoto: z.string().url().optional().or(z.literal('')),
 })
 
@@ -131,6 +134,9 @@ const DraftPersonalInfoSchema = z.object({
   linkedin: z.string().max(CV_LIMITS.personal.url).optional().or(z.literal('')),
   github: z.string().max(CV_LIMITS.personal.url).optional().or(z.literal('')),
   website: z.string().max(CV_LIMITS.personal.url).optional().or(z.literal('')),
+  linkedinLabel: z.string().max(CV_LIMITS.personal.urlLabel).optional(),
+  githubLabel: z.string().max(CV_LIMITS.personal.urlLabel).optional(),
+  websiteLabel: z.string().max(CV_LIMITS.personal.urlLabel).optional(),
   profilePhoto: z.string().max(CV_LIMITS.personal.profilePhoto).optional().or(z.literal('')),
 })
 

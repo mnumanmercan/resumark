@@ -11,6 +11,7 @@ export const CV_LIMITS = {
     phone: 30,
     location: 100,
     url: 500, // linkedin / github / website (draft path; strict path validates .url())
+    urlLabel: 60, // custom anchor text for linkedin / github / website
     profilePhoto: 2048,
   },
   summary: {
