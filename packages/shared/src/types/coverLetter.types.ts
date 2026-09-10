@@ -6,9 +6,10 @@ export interface CoverLetterData {
   email: string
   phone: string
   location: string
-  date: string
   recipientName: string
   recipientTitle: string
+  /** Name after "Dear"; empty falls back to `recipientName`, then "Hiring Manager". */
+  salutation: string
   companyName: string
   companyAddress: string
   opening: string

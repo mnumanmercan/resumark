@@ -365,9 +365,11 @@ export interface Translations {
     detailEmail: string
     detailPhone: string
     detailLocation: string
-    detailDate: string
     recipientName: string
     recipientTitle: string
+    salutation: string
+    salutationPlaceholder: string
+    salutationHint: string
     recipientCompany: string
     recipientAddress: string
     targetJobDescription: string

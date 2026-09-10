@@ -1,7 +1,37 @@
 <script setup lang="ts">
-  import type { CoverLetterData } from '@/types/coverLetter.types'
+  import { computed, onMounted, onUnmounted, ref } from 'vue'
+  import { type CoverLetterData, formatLetterDate } from '@/types/coverLetter.types'
+  import { useI18n } from '@/composables/useI18n'
 
-  defineProps<{ clData: CoverLetterData }>()
+  const props = defineProps<{ clData: CoverLetterData }>()
+
+  const { locale } = useI18n()
+
+  /**
+   * The letter is stamped with today's date rather than a hand-typed one, so
+   * the PDF always carries the day it was downloaded. The builder is a tab
+   * people leave open, so refresh the stamp whenever the tab is looked at
+   * again — otherwise a letter exported the morning after would be a day stale.
+   */
+  const today = ref(new Date())
+  const letterDate = computed(() => formatLetterDate(locale.value, today.value))
+
+  function refreshDate(): void {
+    if (document.visibilityState === 'visible') today.value = new Date()
+  }
+
+  onMounted(() => document.addEventListener('visibilitychange', refreshDate))
+  onUnmounted(() => document.removeEventListener('visibilitychange', refreshDate))
+
+  /**
+   * Who the letter greets. `salutation` is independent of the addressee, so the
+   * envelope can go to HR by name while the greeting reads "Hiring Manager".
+   * Falling back to recipientName preserves how letters written before the
+   * field existed have always rendered.
+   */
+  const greeting = computed(
+    () => props.clData.salutation?.trim() || props.clData.recipientName?.trim() || 'Hiring Manager',
+  )
 </script>
 
 <template>
@@ -55,9 +85,9 @@
       </p>
     </header>
 
-    <!-- ── Date ────────────────────────────────────────────── -->
+    <!-- ── Date — always today, never hand-entered ─────────── -->
     <p style="font-size: 13px; color: #64748b; margin: 0 0 24px; text-align: right">
-      {{ clData.date }}
+      {{ letterDate }}
     </p>
 
     <!-- ── Recipient address block ─────────────────────────── -->
@@ -82,7 +112,7 @@
 
     <!-- ── Salutation ──────────────────────────────────────── -->
     <p style="font-size: 13.5px; color: #0f172a; margin: 0 0 20px; font-weight: 500">
-      Dear {{ clData.recipientName || 'Hiring Manager' }},
+      Dear {{ greeting }},
     </p>
 
     <!-- ── Body ───────────────────────────────────────────── -->

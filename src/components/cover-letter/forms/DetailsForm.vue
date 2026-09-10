@@ -79,20 +79,13 @@
       />
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      <FormField
-        id="cl-location"
-        v-model="clData.location"
-        :label="t('coverLetter.detailLocation')"
-        placeholder="New York, NY"
-        autocomplete="address-level2"
-      />
-      <FormField
-        id="cl-date"
-        v-model="clData.date"
-        :label="t('coverLetter.detailDate')"
-        placeholder="April 9, 2026"
-      />
-    </div>
+    <!-- No date field: the letter is stamped with the day it is exported. -->
+    <FormField
+      id="cl-location"
+      v-model="clData.location"
+      :label="t('coverLetter.detailLocation')"
+      placeholder="New York, NY"
+      autocomplete="address-level2"
+    />
   </div>
 </template>
