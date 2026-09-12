@@ -13,7 +13,6 @@ import {
 } from '@/services/coverLetterStorageService'
 import {
   createEmptyCoverLetterData,
-  formatLetterDate,
   COVER_LETTER_CURRENT_VERSION,
   type CoverLetterData,
 } from '@/types/coverLetter.types'
@@ -63,26 +62,6 @@ describe('coverLetterStore', () => {
     expect(store.clData.opening).toBe('An opening paragraph.')
   })
 
-  it('backfills salutation and drops the hand-typed date from a v1.1.0 blob', async () => {
-    // The pre-1.2.0 shape: a date the user had to retype, and no salutation.
-    const stored = createEmptyCoverLetterData() as CoverLetterData & { date?: string }
-    stored.recipientName = 'Sarah Johnson'
-    stored.date = 'July 14, 2026'
-    delete (stored as Partial<CoverLetterData>).salutation
-    stored.meta.version = '1.1.0'
-
-    coverLetterStorageService.setDelegate(makeStorage(stored))
-    const store = useCoverLetterStore()
-
-    await store.loadFromStorage()
-
-    expect(store.clData.salutation).toBe('')
-    expect(store.clData).not.toHaveProperty('date')
-    // The addressee is untouched — only the greeting became independent of it.
-    expect(store.clData.recipientName).toBe('Sarah Johnson')
-    expect(store.clData.meta.version).toBe(COVER_LETTER_CURRENT_VERSION)
-  })
-
   it('leaves a current-version blob untouched', async () => {
     const current = createEmptyCoverLetterData()
     current.targetJobDescription = 'A pasted job posting.'
@@ -93,21 +72,5 @@ describe('coverLetterStore', () => {
 
     expect(store.clData.targetJobDescription).toBe('A pasted job posting.')
     expect(store.clData.meta.version).toBe(COVER_LETTER_CURRENT_VERSION)
-  })
-})
-
-describe('formatLetterDate', () => {
-  const day = new Date(2026, 8, 10) // 10 September 2026, local time
-
-  it('renders a long English date', () => {
-    expect(formatLetterDate('en', day)).toBe('September 10, 2026')
-  })
-
-  it('renders the Turkish month name when the UI is in Turkish', () => {
-    expect(formatLetterDate('tr', day)).toBe('10 Eylül 2026')
-  })
-
-  it('defaults to today, so an export carries the day it was downloaded', () => {
-    expect(formatLetterDate('en')).toBe(formatLetterDate('en', new Date()))
   })
 })

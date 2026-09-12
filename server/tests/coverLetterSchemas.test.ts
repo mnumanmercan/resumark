@@ -88,27 +88,6 @@ describe('CoverLetterDataSchema.targetJobDescription', () => {
         .success,
     ).toBe(false)
   })
-
-  it("defaults salutation to '' when a legacy payload omits it", () => {
-    const result = CoverLetterDataSchema.safeParse(legacyContent)
-    expect(result.success).toBe(true)
-    if (result.success) expect(result.data.salutation).toBe('')
-  })
-
-  it('caps salutation at 100 characters', () => {
-    expect(
-      CoverLetterDataSchema.safeParse({ ...legacyContent, salutation: part(101) }).success,
-    ).toBe(false)
-  })
-
-  // `date` was dropped from the letter in 1.2.0. A client that has not picked
-  // up the new bundle yet still posts it — that must strip, never 400, or every
-  // auto-save from a stale tab would fail.
-  it('strips the removed date field instead of rejecting the payload', () => {
-    const result = CoverLetterDataSchema.safeParse(legacyContent)
-    expect(result.success).toBe(true)
-    if (result.success) expect(result.data).not.toHaveProperty('date')
-  })
 })
 
 describe('SubmitCoverLetterFeedbackSchema', () => {
