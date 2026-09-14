@@ -244,6 +244,19 @@ const en: Translations = {
     statsCvsCreated: 'CVs Created',
     statsCoverLetters: 'Cover Letters',
     statsPdfDownloads: 'PDF Downloads',
+    documentsEyebrow: 'Your documents',
+    activeBadge: 'Active',
+    openInEditor: 'Open “{name}” in the editor',
+    actionsFor: 'Actions for “{name}”',
+    actionPreview: 'Preview',
+    actionShare: 'Share link',
+    actionShareLocked: 'Share link · Pro',
+    actionDelete: 'Delete',
+    actionEdit: 'Edit',
+    newVersionHint: 'Starts as a copy of your active CV',
+    thumbnailUnavailable: 'Preview unavailable',
+    coverLetterEmptyTitle: 'Write your first letter',
+    coverLetterUntitled: 'Cover letter',
   },
 
   pricing: {
@@ -565,11 +578,13 @@ const en: Translations = {
 
   preview: {
     dialogLabel: 'CV preview',
+    coverLetterDialogLabel: 'Cover letter preview',
     close: 'Close preview',
   },
 
   share: {
     panelTitle: 'Share your CV',
+    close: 'Close',
     panelDesc: 'Create a private link anyone can open to view your CV — no account needed.',
     create: 'Create share link',
     creating: 'Creating…',

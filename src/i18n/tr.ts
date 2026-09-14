@@ -244,6 +244,19 @@ const tr: Translations = {
     statsCvsCreated: 'Hazırlanan CV',
     statsCoverLetters: 'Ön Yazı',
     statsPdfDownloads: 'PDF İndirme',
+    documentsEyebrow: 'Belgelerin',
+    activeBadge: 'Aktif',
+    openInEditor: '“{name}” düzenleyicide açılsın',
+    actionsFor: '“{name}” için işlemler',
+    actionPreview: 'Önizle',
+    actionShare: 'Bağlantıyla paylaş',
+    actionShareLocked: 'Bağlantıyla paylaş · Pro',
+    actionDelete: 'Sil',
+    actionEdit: 'Düzenle',
+    newVersionHint: "Aktif CV'nin bir kopyasıyla başlar",
+    thumbnailUnavailable: 'Önizleme yüklenemedi',
+    coverLetterEmptyTitle: 'İlk ön yazını yaz',
+    coverLetterUntitled: 'Ön yazı',
   },
 
   pricing: {
@@ -563,11 +576,13 @@ const tr: Translations = {
 
   preview: {
     dialogLabel: 'CV önizlemesi',
+    coverLetterDialogLabel: 'Ön yazı önizlemesi',
     close: 'Önizlemeyi kapat',
   },
 
   share: {
     panelTitle: 'CV’ni paylaş',
+    close: 'Pencereyi kapat',
     panelDesc: 'Özel bir bağlantı oluştur; herkes hesap açmadan CV’ni görüntüleyebilsin.',
     create: 'Paylaşım bağlantısı oluştur',
     creating: 'Oluşturuluyor…',

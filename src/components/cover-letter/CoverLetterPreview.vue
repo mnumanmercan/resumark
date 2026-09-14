@@ -1,13 +1,24 @@
 <script setup lang="ts">
   import type { CoverLetterData } from '@/types/coverLetter.types'
 
-  defineProps<{ clData: CoverLetterData }>()
+  withDefaults(
+    defineProps<{
+      clData: CoverLetterData
+      /**
+       * DOM id — the PDF export captures `#cover-letter-preview`. Pass null for
+       * extra renders (dashboard thumbnails) so the id stays unique and export
+       * never grabs a scaled-down copy.
+       */
+      previewId?: string | null
+    }>(),
+    { previewId: 'cover-letter-preview' },
+  )
 </script>
 
 <template>
   <!-- A4 at 96dpi: 794 × 1122px (floor of 297mm × 96/25.4). Inline styles only for PDF fidelity. -->
   <article
-    id="cover-letter-preview"
+    :id="previewId ?? undefined"
     style="
       width: 794px;
       min-height: 1122px;
