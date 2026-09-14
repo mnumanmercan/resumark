@@ -12,12 +12,9 @@ export const CoverLetterDataSchema = z.object({
   email: z.string().email().max(254),
   phone: z.string().max(30),
   location: z.string().max(100),
+  date: z.string().max(50),
   recipientName: z.string().max(100),
   recipientTitle: z.string().max(100),
-  // Salutation name, independent of recipientName. .default('') so payloads
-  // from a client that predates the field still parse. `date` was removed
-  // here in 1.2.0 — a stale client still sending it is stripped, not rejected.
-  salutation: z.string().max(100).default(''),
   companyName: z.string().max(200),
   companyAddress: z.string().max(300),
   opening: z.string().max(500),

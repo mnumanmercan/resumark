@@ -246,6 +246,19 @@ export interface Translations {
     statsCvsCreated: string
     statsCoverLetters: string
     statsPdfDownloads: string
+    documentsEyebrow: string
+    activeBadge: string
+    openInEditor: string
+    actionsFor: string
+    actionPreview: string
+    actionShare: string
+    actionShareLocked: string
+    actionDelete: string
+    actionEdit: string
+    newVersionHint: string
+    thumbnailUnavailable: string
+    coverLetterEmptyTitle: string
+    coverLetterUntitled: string
   }
 
   pricing: {
@@ -365,11 +378,9 @@ export interface Translations {
     detailEmail: string
     detailPhone: string
     detailLocation: string
+    detailDate: string
     recipientName: string
     recipientTitle: string
-    salutation: string
-    salutationPlaceholder: string
-    salutationHint: string
     recipientCompany: string
     recipientAddress: string
     targetJobDescription: string
@@ -519,11 +530,13 @@ export interface Translations {
 
   preview: {
     dialogLabel: string
+    coverLetterDialogLabel: string
     close: string
   }
 
   share: {
     panelTitle: string
+    close: string
     panelDesc: string
     create: string
     creating: string

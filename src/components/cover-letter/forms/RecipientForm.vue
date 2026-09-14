@@ -27,15 +27,6 @@
     </div>
 
     <FormField
-      id="cl-salutation"
-      v-model="clData.salutation"
-      :label="t('coverLetter.salutation')"
-      :placeholder="t('coverLetter.salutationPlaceholder')"
-      :hint="t('coverLetter.salutationHint')"
-      :maxlength="100"
-    />
-
-    <FormField
       id="cl-companyName"
       v-model="clData.companyName"
       :label="t('coverLetter.recipientCompany')"

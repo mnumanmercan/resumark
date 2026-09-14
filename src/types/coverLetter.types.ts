@@ -1,21 +1,12 @@
-import type { Locale } from '@/i18n'
-
 export interface CoverLetterData {
   fullName: string
   jobTitle: string
   email: string
   phone: string
   location: string
+  date: string
   recipientName: string
   recipientTitle: string
-  /**
-   * The name after "Dear" in the salutation, independent of `recipientName` —
-   * the same letter may be addressed to HR by name but greeted as "Hiring
-   * Manager", or vice versa. Empty falls back to `recipientName`, then to
-   * "Hiring Manager", which is exactly how the letter read before this field
-   * existed.
-   */
-  salutation: string
   companyName: string
   companyAddress: string
   opening: string
@@ -32,7 +23,7 @@ export interface CoverLetterData {
   }
 }
 
-export const COVER_LETTER_CURRENT_VERSION = '1.2.0'
+export const COVER_LETTER_CURRENT_VERSION = '1.1.0'
 
 export function createEmptyCoverLetterData(): CoverLetterData {
   const now = new Date().toISOString()
@@ -42,9 +33,13 @@ export function createEmptyCoverLetterData(): CoverLetterData {
     email: '',
     phone: '',
     location: '',
+    date: new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }),
     recipientName: '',
     recipientTitle: '',
-    salutation: '',
     companyName: '',
     companyAddress: '',
     opening: '',
@@ -64,31 +59,11 @@ export function createEmptyCoverLetterData(): CoverLetterData {
  *
  * Ladder:
  * - 1.0.0 → 1.1.0 — introduce `targetJobDescription` (default '')
- * - 1.1.0 → 1.2.0 — introduce `salutation` (default ''), drop the hand-typed
- *   `date` (the letter is now stamped with the day it is rendered/exported)
  */
 export function migrateCoverLetterData(stored: CoverLetterData): CoverLetterData {
   if (typeof (stored as Partial<CoverLetterData>).targetJobDescription !== 'string') {
     stored.targetJobDescription = ''
   }
-  if (typeof (stored as Partial<CoverLetterData>).salutation !== 'string') {
-    stored.salutation = ''
-  }
-  // `date` was a free-text field the user had to keep current by hand; the
-  // preview now renders today's date, so drop the stale stored value.
-  delete (stored as { date?: string }).date
   stored.meta.version = COVER_LETTER_CURRENT_VERSION
   return stored
-}
-
-/**
- * The date stamped on the letter — always "now", so the PDF carries the day it
- * was downloaded rather than whatever the user last typed.
- */
-export function formatLetterDate(locale: Locale, now: Date = new Date()): string {
-  return now.toLocaleDateString(locale === 'tr' ? 'tr-TR' : 'en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
 }
