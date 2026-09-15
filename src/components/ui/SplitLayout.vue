@@ -122,10 +122,17 @@
       class="flex flex-1 overflow-hidden"
       :style="isDragging ? 'cursor: col-resize; user-select: none' : ''"
     >
-      <!-- Form panel -->
+      <!--
+        Form panel. `relative` is load-bearing: a scroll container only clips
+        absolutely-positioned descendants whose containing block is inside it.
+        Without it, an unanchored `absolute` child (e.g. Tailwind's `sr-only`)
+        resolves against the viewport, escapes every overflow-hidden ancestor,
+        and grows the document — the whole builder then scrolls up and leaves
+        an empty band at the bottom.
+      -->
       <section
         :class="[
-          'overflow-y-auto transition-none',
+          'relative overflow-y-auto transition-none',
           // Mobile visibility
           mobileTab === 'form' ? 'block' : 'hidden md:block',
           // Desktop sizing: flex-none so it respects the explicit width
@@ -189,10 +196,10 @@
         />
       </div>
 
-      <!-- Preview panel -->
+      <!-- Preview panel — `relative` for the same containment reason as the form panel -->
       <section
         :class="[
-          'min-w-0 overflow-y-auto',
+          'relative min-w-0 overflow-y-auto',
           mobileTab === 'preview' ? 'block' : 'hidden md:block',
           'md:flex-1',
         ]"

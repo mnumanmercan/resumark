@@ -70,7 +70,8 @@
 </script>
 
 <template>
-  <div class="flex flex-col h-screen overflow-hidden" style="background: var(--paper)">
+  <!-- `relative` so overflow-hidden actually contains stray absolute descendants (see SplitLayout) -->
+  <div class="relative flex flex-col h-screen overflow-hidden" style="background: var(--paper)">
     <AppHeader />
     <BuilderToolSwitcher />
 
