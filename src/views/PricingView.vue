@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, computed } from 'vue'
+  import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
   import { RouterLink } from 'vue-router'
   import AppHeader from '@/components/ui/AppHeader.vue'
   import AppFooter from '@/components/ui/AppFooter.vue'
@@ -70,6 +70,57 @@
   function toggleFaq(i: number): void {
     openFaq.value = openFaq.value === i ? null : i
   }
+
+  /* ── Reserved FAQ height ────────────────────────────────────────────────
+     Only one answer is ever open, so the tallest the list can get is
+     "every row collapsed + the single longest answer". Reserving that much
+     up front keeps the sections below the FAQ from jumping as rows open. */
+  const faqListEl = ref<HTMLElement | null>(null)
+  const faqReserve = ref(0)
+
+  function measureFaqReserve(): void {
+    const list = faqListEl.value
+    if (!list) return
+
+    const items = Array.from(list.querySelectorAll<HTMLElement>('[data-faq-item]'))
+    if (items.length === 0) return
+
+    let collapsed = 0
+    let tallestAnswer = 0
+
+    for (const item of items) {
+      const answer = item.querySelector<HTMLElement>('[data-faq-answer]')
+      // Subtracting whatever the answer currently renders (0 when closed,
+      // full height when open, partial mid-transition) leaves the row's
+      // collapsed height in every state.
+      collapsed += item.offsetHeight - (answer?.offsetHeight ?? 0)
+      // scrollHeight is the answer's full height even while clipped to 0.
+      tallestAnswer = Math.max(tallestAnswer, answer?.scrollHeight ?? 0)
+    }
+
+    faqReserve.value = collapsed + tallestAnswer
+  }
+
+  let resizeFrame = 0
+  function scheduleFaqMeasure(): void {
+    cancelAnimationFrame(resizeFrame)
+    resizeFrame = requestAnimationFrame(measureFaqReserve)
+  }
+
+  onMounted(() => {
+    void nextTick(measureFaqReserve)
+    // Web fonts land after mount and reflow the answers.
+    document.fonts?.ready.then(measureFaqReserve).catch(() => {})
+    window.addEventListener('resize', scheduleFaqMeasure)
+  })
+
+  onBeforeUnmount(() => {
+    cancelAnimationFrame(resizeFrame)
+    window.removeEventListener('resize', scheduleFaqMeasure)
+  })
+
+  // Locale switches replace the copy, so the reserve has to be recomputed.
+  watch(faq, () => void nextTick(measureFaqReserve))
 </script>
 
 <template>
@@ -408,10 +459,15 @@
             </h2>
           </div>
 
-          <div class="flex flex-col">
+          <div
+            ref="faqListEl"
+            class="flex flex-col"
+            :style="faqReserve ? { minHeight: `${faqReserve}px` } : undefined"
+          >
             <div
               v-for="(item, i) in faq"
               :key="item.q"
+              data-faq-item
               class="reveal-item border-t border-overlay/10 last:border-b"
               :style="{ animationDelay: `${i * 60}ms` }"
             >
@@ -453,7 +509,7 @@
                 class="grid transition-[grid-template-rows] duration-300 ease-out"
                 :style="{ gridTemplateRows: openFaq === i ? '1fr' : '0fr' }"
               >
-                <div class="overflow-hidden">
+                <div data-faq-answer class="overflow-hidden">
                   <p class="pl-9 pr-1 pb-5 text-[14.5px] leading-[1.6] text-muted">
                     {{ item.a }}
                   </p>
