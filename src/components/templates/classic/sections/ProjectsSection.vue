@@ -61,10 +61,39 @@
       <p style="font-size: 10.5px; color: #374151; margin: 3px 0 2px 0; line-height: 1.55">
         {{ project.description }}
       </p>
-      <p v-if="project.techStack.length" style="font-size: 10px; color: #4b5563; margin: 0">
-        <span style="font-weight: 600; color: #111827">Stack: </span
-        >{{ project.techStack.join(', ') }}
-      </p>
+      <div
+        v-if="project.techStack.length"
+        style="display: flex; align-items: flex-start; gap: 5px; margin-top: 3px"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="11"
+          height="11"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#b8532a"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="flex-shrink: 0; margin-top: 1.5px"
+        >
+          <polygon points="12 2 2 7 12 12 22 7 12 2" />
+          <polyline points="2 17 12 22 22 17" />
+          <polyline points="2 12 12 17 22 12" />
+        </svg>
+        <p
+          style="
+            font-size: 9.5px;
+            font-style: italic;
+            color: #6b7280;
+            letter-spacing: 0.01em;
+            margin: 0;
+            line-height: 1.5;
+          "
+        >
+          {{ project.techStack.join(' · ') }}
+        </p>
+      </div>
     </div>
   </section>
 </template>
